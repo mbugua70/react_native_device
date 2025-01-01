@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import AllPlaces from "./screen/AllPlaces";
 import AddPlace from "./screen/AddPlace";
+import { Colors } from "./constants/Globalcolors";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,15 @@ function HomeScreen() {
 export function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors.primary500,
+          headerTintColor: Colors.gray700,
+        },
+        contentStyle: {
+          backgroundColor: Colors.gray700
+        }
+      }}>
         <Stack.Screen name="All Places" component={AllPlaces} />
         <Stack.Screen name="Add Place" component={AddPlace} />
       </Stack.Navigator>
