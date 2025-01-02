@@ -30,6 +30,12 @@
         {
           "cameraPermission": "The app want to  access your camera to take photo of your location"
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow device app to use your location."
+        }
       ]
     ]
   }

@@ -6,7 +6,7 @@ import { Colors } from '../constants/Globalcolors';
 
 const SecondaryButton = ({onPress,children, icon}) => {
   return (
-       <Pressable style={styles.buttons} onPress={onPress}>
+       <Pressable style={({pressed})=> pressed ? [styles.buttons, styles.pressed] : styles.buttons} onPress={onPress}>
           <Ionicons style={styles.icon} name={icon} size={18} color={Colors.primary500} />
           <Text style={styles.buttonText}>{children}</Text>
        </Pressable>
@@ -33,5 +33,9 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: Colors.primary500,
+  },
+
+  pressed: {
+    opacity: 0.75
   }
 })
