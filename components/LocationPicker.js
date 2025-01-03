@@ -1,15 +1,17 @@
-import { View, Text, StyleSheet} from 'react-native'
+import { View, Text, StyleSheet, Image} from 'react-native'
 import React, { useState } from 'react'
 import SecondaryButton from './SecondaryButton'
 import * as Location from 'expo-location';
 
 
 import { Colors } from '../constants/Globalcolors'
+import { getGoogleMapPreview } from '../util/location';
 
 
 const LocationPicker = () => {
         const [locationPermissionInformation, requestPermission] = Location.useForegroundPermissions();
         const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+        const [pickedLocation, setPickedLocation] = useState(null)
 
     async function verifyLocationPermission(){
           if(locationPermissionInformation.status === Location.PermissionStatus.UNDETERMINED){
@@ -34,9 +36,17 @@ const LocationPicker = () => {
         return;
       }
       setIsFetchingLocation(true)
-      const {coords} = await Location.getCurrentPositionAsync();
+      const {coords} = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
       setIsFetchingLocation(false)
-      console.log(coords);
+      console.log(coords)
+      setPickedLocation({
+        lat: coords.latitude,
+        long: coords.longitude
+      })
+
+      console.log(pickedLocation)
 
     //   if(locationObj){
     //     console.log("Coords got", coords)
@@ -51,12 +61,27 @@ const LocationPicker = () => {
   }
 
    React.useEffect(() => {
-          console.log("Fetching locaation Status:", isFetchingLocation);
+
       }, [isFetchingLocation]);
+      let content = <Text>You have no location picked yet</Text>
+
+      if(pickedLocation){
+        const locationUrl =  getGoogleMapPreview(pickedLocation.lat, pickedLocation.long);
+        console.log(locationUrl);
+
+        if(locationUrl){
+          content =  <Image style={styles.image} source={{uri:locationUrl}}/>
+        }else{
+          content = <Text>Error showing the location</Text>
+        }
+
+      }
 
   return (
     <View>
-      <View style={styles.locationContainer}></View>
+      <View style={styles.locationContainer}>
+        {content}
+      </View>
       <View style={styles.buttonHolder}>
          <View style={styles.buttoncontainer}>
          <SecondaryButton icon="location" onPress={handleGetLocation}>Locate User</SecondaryButton>
@@ -91,6 +116,10 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "center",
         columnGap: 8,
+    },
+    image: {
+      width: "100%",
+      height: "100%",
     }
 
 })
